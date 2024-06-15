@@ -27,6 +27,8 @@ var markerLayer = L.featureGroup().addTo(map);
 var toiletLayer = L.featureGroup().addTo(map);
 var formLayer = L.featureGroup().addTo(map);
 
+var current;
+
 var test = "{\
     \"name\": \"南一中校門口\",\
     \"type\": \"Disabled\",\
@@ -72,26 +74,8 @@ function getToiletLocation() {
 }
 function getDistance() {
     let distance = [];
-    let jsonArray = JSON.parse(test2).values;
-    /*let url = ""; // fill url here
-    fetch(url).then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('無法連絡伺服器，請回報開發者');
-        }).then((json) => {
-            var jsonArray = JSON.parse(json);
-            for (var i = 0; i < jsonArray.length; i++) {
-                distance.push(jsonArray[i]);
-            }
-            return distance;
-        }).catch((error) => {
-            alert(error);
-        });
-    */
-
-    for (var i = 0; i < jsonArray.length; i++) { //test
-        distance.push(jsonArray[i]);
+    for (var i = 0; i < toiletsAll.length; i++) { //test
+        distance.push(Math.round(map.distance(L.latLng(toiletsAll[i].Latitude, toiletsAll[i].Longitude),current.getLatLng())));
     }
     return distance;
 }
@@ -146,10 +130,10 @@ function locationSuccess(position) {
     markerLayer.getLayers().forEach((item) => {
         markerLayer.removeLayer(item);
     });
-    var marker = L.marker([latitude, longitude]).addTo(markerLayer);
-    marker._icon.classList.add("icon_red");
+    current = L.marker([latitude, longitude]).addTo(markerLayer);
+    current._icon.classList.add("icon_red");
     map.flyTo([latitude, longitude], 15);
-    marker.bindPopup("現在位置").openPopup();
+    current.bindPopup("現在位置").openPopup();
     calcDistance();
 }
 function calcDistance() {

@@ -1,41 +1,41 @@
 package com.example.toilet;
 
 public class Status {
-    private String isAvailable;
-    private String isClean;
-    private String isPaper;
-    private String isSoap;
+    private Boolean isAvailable;
+    private Boolean isClean;
+    private Boolean isPaper;
+    private Boolean isSoap;
 
-    public String getIsAvailable() {
+    public Boolean getAvailable() {
         return isAvailable;
     }
 
-    public void setIsAvailable(String isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
     }
 
-    public String getIsClean() {
+    public Boolean getClean() {
         return isClean;
     }
 
-    public void setIsClean(String isClean) {
-        this.isClean = isClean;
+    public void setClean(Boolean clean) {
+        isClean = clean;
     }
 
-    public String getIsPaper() {
+    public Boolean getPaper() {
         return isPaper;
     }
 
-    public void setIsPaper(String isPaper) {
-        this.isPaper = isPaper;
+    public void setPaper(Boolean paper) {
+        isPaper = paper;
     }
 
-    public String getIsSoap() {
+    public Boolean getSoap() {
         return isSoap;
     }
 
-    public void setIsSoap(String isSoap) {
-        this.isSoap = isSoap;
+    public void setSoap(Boolean soap) {
+        isSoap = soap;
     }
 
     @Override

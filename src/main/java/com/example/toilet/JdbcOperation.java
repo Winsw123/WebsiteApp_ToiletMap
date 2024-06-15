@@ -1,123 +1,170 @@
 package com.example.toilet;
 
+import com.example.toilet.Location;
+import org.springframework.stereotype.Service;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
-public class JdbcOperation{
-    public static List<Location> getAllLocations() {
-        Properties properties = new Properties();
-        try (InputStream input = ToiletUpdateUpload.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find db.properties");
-                return null;
-            }
-            properties.load(input);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
+import javax.annotation.PostConstruct;
+
+@Service
+public class JdbcOperation {
+
+    private Connection connection;
+
+    // 获取数据库连接
+    private Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            initializeConnection();
         }
+        return connection;
+    }
 
-        String jdbcUrl = properties.getProperty("jdbc.url");
-        String user = properties.getProperty("jdbc.username");
-        String password = properties.getProperty("jdbc.password");
+    // 初始化数据库连接
+    private synchronized void initializeConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            Properties properties = new Properties();
+            try (InputStream input = JdbcOperation.class.getClassLoader().getResourceAsStream("db.properties")) {
+                if (input == null) {
+                    throw new FileNotFoundException("db.properties file not found");
+                }
+                properties.load(input);
 
-        Connection connection = null;
-        Statement statement = null;
+                String jdbcUrl = properties.getProperty("jdbc.url");
+                String user = properties.getProperty("jdbc.username");
+                String password = properties.getProperty("jdbc.password");
 
-        //create database
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS toilets";
-        statement.executeUpdate(createDatabaseSQL);
-        System.out.println("Database created successfully...");
+                connection = DriverManager.getConnection(jdbcUrl, user, password);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-
-        try {
-            // loading JDBC Driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Create connection
-            connection = DriverManager.getConnection(jdbcUrl, user, password);
-            statement = connection.createStatement();
-
-            //create database
-            String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS toilets";
-            statement.executeUpdate(createDatabaseSQL);
-            System.out.println("Database created successfully...");
-
-            // Use Database
+    // 初始化数据库表结构（如果不存在）
+    @PostConstruct
+    public void initializeDatabase() {
+        try (Statement statement = getConnection().createStatement()) {
             String useDatabaseSQL = "USE toilets";
             statement.executeUpdate(useDatabaseSQL);
-            System.out.println("Using database...");
 
-            //Create Table
-            String createTableLocationsSQL = "CREATE TABLE IF NOT EXISTS locations ("
-                    + "id INT NOT NULL AUTO_INCREMENT,"
-                    + "longitude DOUBLE NOT NULL,"
-                    + "latitude DOUBLE NOT NULL,"
-                    + "name VARCHAR(255) NOT NULL,"
-                    + "type VARCHAR(255) NOT NULL,"
-                    + "isFree BOOLEAN NOT NULL,"
-                    + "PRIMARY KEY (id)),"
-                    + "FOREIGN KEY (Status) REFERENCES status(id)";
+            String createTableSQL = "CREATE TABLE IF NOT EXISTS toilet_location (" +
+                    "id INT NOT NULL AUTO_INCREMENT," +
+                    "longitude VARCHAR(255) NOT NULL," +
+                    "latitude VARCHAR(255) NOT NULL," +
+                    "name VARCHAR(255) NOT NULL," +
+                    "type VARCHAR(255)," +
+                    "isFree VARCHAR(255) NOT NULL," +
+                    "isAvailable BOOLEAN," +
+                    "isClean BOOLEAN," +
+                    "isPaper BOOLEAN," +
+                    "isSoap BOOLEAN," +
+                    "PRIMARY KEY (id))";
 
-            String createTableStatusSQL = "CREATE TABLE IF NOT EXISTS status ("
-                    + "id INT NOT NULL AUTO_INCREMENT,"
-                    + "isAvailable BOOLEAN NOT NULL,"
-                    + "isClean BOOLEAN NOT NULL,"
-                    + "isPaper BOOLEAN NOT NULL,"
-                    + "isSoap BOOLEAN NOT NULL,"
-                    + "PRIMARY KEY (id)),"
-                    + "FOREIGN KEY (Locations) REFERENCES locations(id)";
+            statement.executeUpdate(createTableSQL);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-            statement.executeUpdate(createTableLocationsSQL);
-            System.out.println("Table locations created successfully...");
+    // 添加厕所位置记录到数据库
+    public void addToiletLocation(Location location) {
+        String sql = "INSERT INTO toilet_location (latitude, longitude, name, comment, isFree, floor, accessibility, isGenderFriendly, isDisabledFriendly) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
+            preparedStatement.setString(1, location.getLatitude());
+            preparedStatement.setString(2, location.getLongitude());
+            preparedStatement.setString(3, location.getName());
+            preparedStatement.setString(4, location.getType());
+            preparedStatement.setString(5, location.getIsFree());
+            preparedStatement.setBoolean(6, location.getAvailable());
+            preparedStatement.setBoolean(7, location.getClean());
+            preparedStatement.setBoolean(8, location.getPaper());
+            preparedStatement.setBoolean(9, location.getSoap());
 
-            statement.executeUpdate(createTableStatusSQL);
-            System.out.println("Table status created successfully...");
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 1) {
+                System.out.println("Inserted 1 row into toilet_location table.");
+            } else {
+                System.out.println("Failed to insert into toilet_location table.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-            //Insert Data
-            String insertLocationsDataSQL = "INSERT INTO locations (longitude, latitude, name, type, isFree) VALUES (116.397128, 39.916527, 'Beijing', 'Toilet', true)";
-            statement.executeUpdate(insertLocationsDataSQL);
+    // 获取所有厕所位置记录
+    public List<Location> getAllLocations() {
+        List<Location> retLocations = new ArrayList<>();
+        String sql = "SELECT * FROM toilet_location";
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
 
-            String insertStatusDataSQL = "INSERT INTO status (isAvailable, isClean, isPaper, isSoap) VALUES (true, true, true, true)";
-
-            //Extract All Data
-            List<Location> retLocations = new ArrayList<>();
-            String selectDataSQL = "SELECT * FROM locations l, status s WHERE l.id = s.id";
-            ResultSet resultSet = statement.executeQuery(selectDataSQL);
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                double longitude = resultSet.getDouble("longitude");
-                double latitude = resultSet.getDouble("latitude");
+                String longitude = resultSet.getString("longitude");
+                String latitude = resultSet.getString("latitude");
                 String name = resultSet.getString("name");
                 String type = resultSet.getString("type");
-                boolean isFree = resultSet.getBoolean("isFree");
+                String isFree = resultSet.getString("isFree");
                 boolean isAvailable = resultSet.getBoolean("isAvailable");
                 boolean isClean = resultSet.getBoolean("isClean");
                 boolean isPaper = resultSet.getBoolean("isPaper");
                 boolean isSoap = resultSet.getBoolean("isSoap");
 
-                retLocations.add(l);
+                Location location = new Location(isAvailable, isClean, isPaper, isSoap, latitude, longitude, name, type, isFree);
+                retLocations.add(location);
             }
-            return retLocations;
-
-
-
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // 关闭连接
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        return null;
+        return retLocations;
     }
 
+    // 获取随机厕所位置记录
+    public Location getRandomLocation(List<Location> locations) {
+        if (locations == null || locations.isEmpty()) {
+            return null;
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(locations.size());
+        return locations.get(index);
+    }
+
+    // 关闭数据库连接
+    public void closeConnection() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // 检查是否存在具有特定经纬度的厕所位置记录
+    public boolean checkLocationExists(double latitude, double longitude) {
+        String sql = "SELECT COUNT(*) AS count FROM toilet_location WHERE latitude = ? AND longitude = ?";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
+            preparedStatement.setDouble(1, latitude);
+            preparedStatement.setDouble(2, longitude);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

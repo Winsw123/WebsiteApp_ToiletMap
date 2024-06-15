@@ -1,7 +1,5 @@
 package com.example.toilet;
 
-import com.example.toilet.Location;
-import com.example.toilet.JdbcOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +20,7 @@ public class LocationController {
 
     @GetMapping("/getToiletLocations")
     public List<Location> getToiletLocations() {
-        List<Location> toilets = JdbcOperation.getAllLocations();
+        List<Location> toilets = jdbcOperation.getAllLocations();
         return toilets != null ? toilets : Collections.emptyList();
     }
 

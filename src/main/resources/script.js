@@ -215,25 +215,35 @@ function makeForm() {
     return format;
 }
 function submit() {
-    if(v("form_name") == ""){
+    var form_name = document.getElementById("form_name").value;
+    var form_type = document.getElementById("form_type").value;
+    var form_isFree = document.getElementById("form_isFree").checked;
+    var form_isAvailable = document.getElementById("form_isAvailable").checked;
+    var form_isClean = document.getElementById("form_isClean").checked;
+    var form_isPaper = document.getElementById("form_isPaper").checked;
+    var form_isSoap = document.getElementById("form_isSoap").checked;
+    var form_longitude = v("form_longitude"); 
+    var form_latitude = v("form_latitude");
+
+    if (form_name === "") {
         alert("請輸入廁所名稱");
         return;
     }
-    /*
-    let url = ""; // fill url here
+
+    let url = "http://localhost:8080/api/addToiletLocation"; // 填写后端接口的URL
     fetch(url, {
         method: "POST",
         body: JSON.stringify({
-            name: v(form_name),
-            type: v(form_type),
-            isFree: c(form_isFree),
-            Longitude: v(form_longitude),
-            Latitude: v(form_latitude),
+            name: form_name,
+            type: form_type,
+            isFree: form_isFree,
+            longitude: form_longitude,
+            latitude: form_latitude,
             Status: {
-                isAvailable: c(form_isAvailable),
-                isClean: c(form_isClean),
-                isPaper: c(form_isPaper),
-                isSoap: c(form_isSoap)
+                isAvailable: form_isAvailable,
+                isClean: form_isClean,
+                isPaper: form_isPaper,
+                isSoap: form_isSoap
             }
         }),
         headers: {
@@ -242,11 +252,12 @@ function submit() {
     }).then((response) => {
         if (response.ok) {
             refresh();
+        } else {
+            throw new Error('無法連絡伺服器，請回報開發者');
         }
-        throw new Error('無法連絡伺服器，請回報開發者');
     }).catch((error) => {
         alert(error);
-    });*/
+    });
     test3.push(new Toilet().set({ //test
         name: v("form_name"),
         type: v("form_type"),

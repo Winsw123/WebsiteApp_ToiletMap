@@ -52,20 +52,20 @@ public class JdbcOperation {
     @PostConstruct
     public void initializeDatabase() {
         try (Statement statement = getConnection().createStatement()) {
-            String useDatabaseSQL = "USE toilets";
+            String useDatabaseSQL = "USE toilet";
             statement.executeUpdate(useDatabaseSQL);
 
             String createTableSQL = "CREATE TABLE IF NOT EXISTS toilet_location (" +
                     "id INT NOT NULL AUTO_INCREMENT," +
-                    "longitude VARCHAR(255) NOT NULL," +
-                    "latitude VARCHAR(255) NOT NULL," +
                     "name VARCHAR(255) NOT NULL," +
-                    "type VARCHAR(255)," +
+                    "type VARCHAR(255) NOT NULL," +
                     "isFree VARCHAR(255) NOT NULL," +
                     "isAvailable BOOLEAN," +
                     "isClean BOOLEAN," +
                     "isPaper BOOLEAN," +
                     "isSoap BOOLEAN," +
+                    "Longitude VARCHAR(255) NOT NULL," +
+                    "Latitude VARCHAR(255) NOT NULL," +
                     "PRIMARY KEY (id))";
 
             statement.executeUpdate(createTableSQL);
@@ -76,18 +76,18 @@ public class JdbcOperation {
 
     // 添加厕所位置记录到数据库
     public void addToiletLocation(Location location) {
-        String sql = "INSERT INTO toilet_location (latitude, longitude, name, comment, isFree, floor, accessibility, isGenderFriendly, isDisabledFriendly) " +
+        String sql = "INSERT INTO toilet_location (name, type, isFree, isAvailable, isClean, isPaper, isSoap, Longitude, Latitude) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
-            preparedStatement.setString(1, location.getLatitude());
-            preparedStatement.setString(2, location.getLongitude());
-            preparedStatement.setString(3, location.getName());
-            preparedStatement.setString(4, location.getType());
-            preparedStatement.setString(5, location.getIsFree());
-            preparedStatement.setBoolean(6, location.getAvailable());
-            preparedStatement.setBoolean(7, location.getClean());
-            preparedStatement.setBoolean(8, location.getPaper());
-            preparedStatement.setBoolean(9, location.getSoap());
+            preparedStatement.setString(1, location.getName());
+            preparedStatement.setString(2, location.getType());
+            preparedStatement.setString(3, location.getIsFree());
+            preparedStatement.setBoolean(4, location.getAvailable());
+            preparedStatement.setBoolean(5, location.getClean());
+            preparedStatement.setBoolean(6, location.getPaper());
+            preparedStatement.setBoolean(7, location.getSoap());
+            preparedStatement.setString(8, location.getLongitude());
+            preparedStatement.setString(9, location.getLatitude());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected == 1) {
@@ -108,8 +108,6 @@ public class JdbcOperation {
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             while (resultSet.next()) {
-                String longitude = resultSet.getString("longitude");
-                String latitude = resultSet.getString("latitude");
                 String name = resultSet.getString("name");
                 String type = resultSet.getString("type");
                 String isFree = resultSet.getString("isFree");
@@ -117,8 +115,10 @@ public class JdbcOperation {
                 boolean isClean = resultSet.getBoolean("isClean");
                 boolean isPaper = resultSet.getBoolean("isPaper");
                 boolean isSoap = resultSet.getBoolean("isSoap");
+                String longitude = resultSet.getString("Longitude");
+                String latitude = resultSet.getString("Latitude");
 
-                Location location = new Location(isAvailable, isClean, isPaper, isSoap, latitude, longitude, name, type, isFree);
+                Location location = new Location(isAvailable, isClean, isPaper, isSoap, name, type, isFree, latitude, longitude);
                 retLocations.add(location);
             }
         } catch (SQLException ex) {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class JdbcOperation{
-    public static List<Location> getAlllocations() {
+    public static List<Location> getAllLocations() {
         Properties properties = new Properties();
         try (InputStream input = ToiletUpdateUpload.class.getClassLoader().getResourceAsStream("db.properties")) {
             if (input == null) {
@@ -53,36 +53,53 @@ public class JdbcOperation{
             System.out.println("Using database...");
 
             //Create Table
-            String createTableSQL = "CREATE TABLE IF NOT EXISTS locations ("
+            String createTableLocationsSQL = "CREATE TABLE IF NOT EXISTS locations ("
                     + "id INT NOT NULL AUTO_INCREMENT,"
                     + "longitude DOUBLE NOT NULL,"
                     + "latitude DOUBLE NOT NULL,"
                     + "name VARCHAR(255) NOT NULL,"
                     + "type VARCHAR(255) NOT NULL,"
                     + "isFree BOOLEAN NOT NULL,"
-                    + "PRIMARY KEY (id))";
+                    + "PRIMARY KEY (id)),"
+                    + "FOREIGN KEY (Status) REFERENCES status(id)";
 
-            statement.executeUpdate(createTableSQL);
-            System.out.println("Table created successfully...");
+            String createTableStatusSQL = "CREATE TABLE IF NOT EXISTS status ("
+                    + "id INT NOT NULL AUTO_INCREMENT,"
+                    + "isAvailable BOOLEAN NOT NULL,"
+                    + "isClean BOOLEAN NOT NULL,"
+                    + "isPaper BOOLEAN NOT NULL,"
+                    + "isSoap BOOLEAN NOT NULL,"
+                    + "PRIMARY KEY (id)),"
+                    + "FOREIGN KEY (Locations) REFERENCES locations(id)";
 
+            statement.executeUpdate(createTableLocationsSQL);
+            System.out.println("Table locations created successfully...");
+
+            statement.executeUpdate(createTableStatusSQL);
+            System.out.println("Table status created successfully...");
+
+            //Insert Data
+            String insertLocationsDataSQL = "INSERT INTO locations (longitude, latitude, name, type, isFree) VALUES (116.397128, 39.916527, 'Beijing', 'Toilet', true)";
+            statement.executeUpdate(insertLocationsDataSQL);
+
+            String insertStatusDataSQL = "INSERT INTO status (isAvailable, isClean, isPaper, isSoap) VALUES (true, true, true, true)";
 
             //Extract All Data
             List<Location> retLocations = new ArrayList<>();
-            String selectDataSQL = "SELECT * FROM locations";
+            String selectDataSQL = "SELECT * FROM locations l, status s WHERE l.id = s.id";
             ResultSet resultSet = statement.executeQuery(selectDataSQL);
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 double longitude = resultSet.getDouble("longitude");
                 double latitude = resultSet.getDouble("latitude");
                 String name = resultSet.getString("name");
-                String comment = resultSet.getString("comment");
+                String type = resultSet.getString("type");
                 boolean isFree = resultSet.getBoolean("isFree");
-                int floor = resultSet.getInt("floor");
-                boolean accessibility = resultSet.getBoolean("accessibility");
-                boolean isGenderFriendly = resultSet.getBoolean("isGenderFriendly");
-                boolean isDisabledFriendly = resultSet.getBoolean("isDisabledFriendly");
+                boolean isAvailable = resultSet.getBoolean("isAvailable");
+                boolean isClean = resultSet.getBoolean("isClean");
+                boolean isPaper = resultSet.getBoolean("isPaper");
+                boolean isSoap = resultSet.getBoolean("isSoap");
 
-                Location l = new Location(latitude, longitude, name, comment, isFree, floor, accessibility, isGenderFriendly, isDisabledFriendly);
                 retLocations.add(l);
             }
             return retLocations;

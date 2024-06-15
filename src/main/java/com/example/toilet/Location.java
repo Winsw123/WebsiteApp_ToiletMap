@@ -1,18 +1,17 @@
 package com.example.toilet;
 
-public class Location {
+public class Location extends Status {
     private String name;
     private String isFree;
     private String type;
     private String latitude;
     private String longitude;
 
-    Status status = new Status();
-
     public Location() {
     }
 
-    public Location(String name, String isFree, String type, String latitude, String longitude) {
+    public Location(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap, String name, String isFree, String type, String latitude, String longitude) {
+        super(isAvailable, isClean, isPaper, isSoap);
         this.name = name;
         this.isFree = isFree;
         this.type = type;
@@ -69,7 +68,10 @@ public class Location {
                 ", type='" + type + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
-                status.toString() +
+                ", isAvailable='" + getAvailable() + '\'' +
+                ", isClean='" + getClean() + '\'' +
+                ", isPaper='" + getPaper() + '\'' +
+                ", isSoap='" + getSoap() + '\'' +
                 '}';
     }
 }

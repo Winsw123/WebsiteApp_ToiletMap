@@ -1,41 +1,51 @@
 package com.example.toilet;
 
 public class Status {
-    private Boolean isAvailable;
-    private Boolean isClean;
-    private Boolean isPaper;
-    private Boolean isSoap;
+    private boolean isAvailable;
+    private boolean isClean;
+    private boolean isPaper;
+    private boolean isSoap;
 
-    public Boolean getAvailable() {
+    public Status(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap) {
+        this.isAvailable = isAvailable;
+        this.isClean = isClean;
+        this.isPaper = isPaper;
+        this.isSoap = isSoap;
+    }
+
+    public Status() {
+    }
+
+    public boolean getAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(Boolean available) {
-        isAvailable = available;
+    public void setAvailable(boolean available) {
+        this.isAvailable = available;
     }
 
-    public Boolean getClean() {
+    public boolean getClean() {
         return isClean;
     }
 
-    public void setClean(Boolean clean) {
-        isClean = clean;
+    public void setClean(boolean clean) {
+        this.isClean = clean;
     }
 
-    public Boolean getPaper() {
+    public boolean getPaper() {
         return isPaper;
     }
 
-    public void setPaper(Boolean paper) {
-        isPaper = paper;
+    public void setPaper(boolean paper) {
+        this.isPaper = paper;
     }
 
-    public Boolean getSoap() {
+    public boolean getSoap() {
         return isSoap;
     }
 
-    public void setSoap(Boolean soap) {
-        isSoap = soap;
+    public void setSoap(boolean soap) {
+        this.isSoap = soap;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class LocationController {
 
     @GetMapping("/getToiletLocations")
     public List<Location> getToiletLocations() {
-        List<Location> toilets = jdbcOperation.getAllLocations();
+        List<Location> toilets = JdbcOperation.getAllLocations();
         return toilets != null ? toilets : Collections.emptyList();
     }
 

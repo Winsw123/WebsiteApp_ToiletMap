@@ -13,6 +13,18 @@ body {
     text-decoration: none;
 }
 
+input[type="input"], select{
+    margin-left: 5px;
+}
+
+.add-overlay {
+    position: absolute;
+    top: 1.5em;
+    left:50% ;
+    z-index: 88889;
+    transform: translate(-50%, 0);
+}
+
 .btn-overlay {
     position: absolute;
     top: 1.5em;
@@ -20,7 +32,28 @@ body {
     z-index: 88888;
 }
 
-.form {}
+.crosshair {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid black;
+    border-radius: 17px;
+}
+
+.crosshair a {
+    position: absolute;
+    font-size: 35px;
+    top: -13.5px;
+    left: -0.146px;
+    color: #34343486;
+}
+
+.form{
+    line-height: 30px;
+}
 
 .icon_red {
     filter: hue-rotate(120deg);
@@ -37,9 +70,9 @@ body {
 }
 
 .main-button a {
+    line-height: 30px;
     text-align: center;
     vertical-align: middle;
-    line-height: 30px;
 }
 
 .map-container {
@@ -52,8 +85,8 @@ body {
     position: absolute;
     height: 100%;
     width: 100%;
+    pointer-events: none;
     z-index: 88888;
-    background-color: #aaaaaaaa;
 }
 
 #map {

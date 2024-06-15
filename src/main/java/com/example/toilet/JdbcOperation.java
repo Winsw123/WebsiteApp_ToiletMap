@@ -76,16 +76,16 @@ public class JdbcOperation {
 
     // 添加厕所位置记录到数据库
     public void addToiletLocation(Location location) {
-        String sql = "INSERT INTO toilet_location (name, type, isFree, isAvailable, isClean, isPaper, isSoap, Longitude, Latitude) " +
+        String sql = "INSERT INTO toilet_location (name, type, isFree, isAvailable, isClean, isPaper, isSoap, longitude, latitude) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
             preparedStatement.setString(1, location.getName());
             preparedStatement.setString(2, location.getType());
             preparedStatement.setString(3, location.getIsFree());
-            preparedStatement.setBoolean(4, location.getAvailable());
-            preparedStatement.setBoolean(5, location.getClean());
-            preparedStatement.setBoolean(6, location.getPaper());
-            preparedStatement.setBoolean(7, location.getSoap());
+            preparedStatement.setBoolean(4, location.getStatus().getAvailable());
+            preparedStatement.setBoolean(5, location.getStatus().getClean());
+            preparedStatement.setBoolean(6, location.getStatus().getPaper());
+            preparedStatement.setBoolean(7, location.getStatus().getSoap());
             preparedStatement.setString(8, location.getLongitude());
             preparedStatement.setString(9, location.getLatitude());
 
@@ -115,8 +115,8 @@ public class JdbcOperation {
                 boolean isClean = resultSet.getBoolean("isClean");
                 boolean isPaper = resultSet.getBoolean("isPaper");
                 boolean isSoap = resultSet.getBoolean("isSoap");
-                String longitude = resultSet.getString("Longitude");
-                String latitude = resultSet.getString("Latitude");
+                String longitude = resultSet.getString("longitude");
+                String latitude = resultSet.getString("latitude");
 
                 Location location = new Location(isAvailable, isClean, isPaper, isSoap, name, type, isFree, latitude, longitude);
                 retLocations.add(location);

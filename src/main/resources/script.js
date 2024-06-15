@@ -3,16 +3,16 @@ class Toilet {
         this.name = "小東路地下道";
         this.type = "All Gender";
         this.isFree = true;
-        this.Longitude = 120.21379292529143;
-        this.Latitude = 23.00158213806466;
+        this.longitude = 120.21379292529143;
+        this.latitude = 23.00158213806466;
         this.Status = {
             isAvailable: true,
             isClean: true,
             isPaper: true,
             isSoap: true
         };
-        this.set = function set(json) {
-            return Object.assign(new Toilet(), json);
+        Toilet.prototype.set = function(json) {
+            return Object.assign(this, json);
         }
     }
 }
@@ -31,8 +31,8 @@ var test = "{\
     \"name\": \"南一中校門口\",\
     \"type\": \"Disabled\",\
     \"isFree\": false,\
-    \"Longitude\": 120.21557856948613,\
-    \"Latitude\": 22.9942663239397,\
+    \"longitude\": 120.21557856948613,\
+    \"latitude\": 22.9942663239397,\
     \"Status\": {\
         \"isAvailable\" : false,\
         \"isClean\" : false,\
@@ -48,28 +48,49 @@ var test3 = [];
 var toiletsAll;
 getToiletLocation();
 
-function getToiletLocation() {
-    toiletsAll = [];
-    /*let url = ""; // fill url here
-    fetch(url).then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('無法連絡伺服器，請回報開發者');
-        }).then((json) => {
-            var jsonArray = JSON.parse(json);
-            for (var i = 0; i < jsonArray.length; i++) {
-                toiletsAll.push(new Toilet.set(jsonArray[i]));
-            }
-        }).catch((error) => {
-            alert(error);
-        });
-    */
+async function getToiletLocation() {
+    let toiletsAll = [];
+    let url = "http://localhost:8080/api/getToiletLocation"; // 后端的URL
 
+    try {
+        let response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to contact server, please report to the developer');
+        }
+
+        let json = await response.json();
+
+        if (json.length === 0) {
+            throw new Error('No toilet locations found');
+        }
+
+        console.log('Raw data from server:', json); // 输出从服务器获取的原始数据
+
+        for (let i = 0; i < json.length; i++) {
+            let toilet = new Toilet();
+            toilet.set(json[i]);
+            toiletsAll.push(toilet);
+        }
+
+        console.log('Toilets after processing:', toiletsAll); // 输出处理后的卫生间数据数组
+
+        // 显示卫生间位置数据到界面
+        displayToilet(toiletsAll, null);
+
+    } catch (error) {
+        alert(error.message);
+    }
     toiletsAll.push(new Toilet()); // test
     toiletsAll.push(new Toilet().set(JSON.parse(test))); // test
     displayToilet(toiletsAll, null);
 }
+
 function getDistance() {
     let distance = [];
     let jsonArray = JSON.parse(test2).values;
@@ -101,12 +122,13 @@ function displayToilet(toilets, distance) {
         f = 1;
     }
     for (var i = 0; i < toilets.length; i++) {
-        let longitude = toilets[i].Longitude;
-        let latitude = toilets[i].Latitude;
+        let longitude = toilets[i].longitude;
+        let latitude = toilets[i].latitude;
         let temp = L.marker([latitude, longitude]).addTo(toiletLayer);
         temp.bindPopup(formatPopup(toilets[i], f ? distance[i] : -1));
     }
 }
+
 function formatPopup(toilet, toiletDist) {
     let name = toilet.name;
     let type;
@@ -222,8 +244,8 @@ function submit() {
     var form_isClean = document.getElementById("form_isClean").checked;
     var form_isPaper = document.getElementById("form_isPaper").checked;
     var form_isSoap = document.getElementById("form_isSoap").checked;
-    var form_longitude = v("form_longitude"); 
-    var form_latitude = v("form_latitude");
+    var form_longitude = document.getElementById("form_longitude").value;
+    var form_latitude = document.getElementById("form_latitude").value;
 
     if (form_name === "") {
         alert("請輸入廁所名稱");
@@ -251,7 +273,7 @@ function submit() {
         }
     }).then((response) => {
         if (response.ok) {
-            refresh();
+            alert("儲存成功");
         } else {
             throw new Error('無法連絡伺服器，請回報開發者');
         }
@@ -262,8 +284,8 @@ function submit() {
         name: v("form_name"),
         type: v("form_type"),
         isFree: c("form_isFree"),
-        Longitude: v("form_longitude"),
-        Latitude: v("form_latitude"),
+        longitude: v("form_longitude"),
+        latitude: v("form_latitude"),
         Status: {
             isAvailable: c("form_isAvailable"),
             isClean: c("form_isClean"),

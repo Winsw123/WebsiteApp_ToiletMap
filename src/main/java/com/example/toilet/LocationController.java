@@ -18,7 +18,7 @@ public class LocationController {
         this.jdbcOperation = jdbcOperation;
     }
 
-    @GetMapping("/getToiletLocations")
+    @GetMapping("/getToiletLocation")
     public List<Location> getToiletLocations() {
         List<Location> toilets = jdbcOperation.getAllLocations();
         return toilets != null ? toilets : Collections.emptyList();

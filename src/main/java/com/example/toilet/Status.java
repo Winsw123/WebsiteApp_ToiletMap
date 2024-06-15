@@ -1,10 +1,10 @@
 package com.example.toilet;
 
 public class Status {
-    private boolean isAvailable;
-    private boolean isClean;
-    private boolean isPaper;
-    private boolean isSoap;
+    protected boolean isAvailable;
+    protected boolean isClean;
+    protected boolean isPaper;
+    protected boolean isSoap;
 
     public Status(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap) {
         this.isAvailable = isAvailable;

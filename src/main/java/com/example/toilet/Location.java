@@ -6,12 +6,13 @@ public class Location extends Status {
     private String type;
     private String latitude;
     private String longitude;
+    private Status status;
 
     public Location() {
     }
 
     public Location(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap, String name, String isFree, String type, String latitude, String longitude) {
-        super(isAvailable, isClean, isPaper, isSoap);
+        this.status = new Status(isAvailable, isClean, isPaper, isSoap);
         this.name = name;
         this.isFree = isFree;
         this.type = type;
@@ -59,6 +60,13 @@ public class Location extends Status {
         this.longitude = longitude;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {

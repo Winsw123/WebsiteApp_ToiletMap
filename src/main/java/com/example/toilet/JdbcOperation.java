@@ -57,7 +57,7 @@ public class JdbcOperation {
                     "id INT NOT NULL AUTO_INCREMENT," +
                     "name VARCHAR(255) NOT NULL," +
                     "type VARCHAR(255) NOT NULL," +
-                    "isFree VARCHAR(255) NOT NULL," +
+                    "isFree BOOLEAN NOT NULL," +
                     "isAvailable BOOLEAN," +
                     "isClean BOOLEAN," +
                     "isPaper BOOLEAN," +
@@ -116,7 +116,7 @@ public class JdbcOperation {
                 String longitude = resultSet.getString("longitude");
                 String latitude = resultSet.getString("latitude");
 
-                Location location = new Location(name, type, isFree, longitude, latitude, isAvailable, isClean, isPaper, isSoap);
+                Location location = new Location(name, type, isFree, isAvailable, isClean, isPaper, isSoap, longitude, latitude);
                 retLocations.add(location);
             }
         } catch (SQLException ex) {

@@ -1,6 +1,5 @@
 package com.example.toilet;
 
-import com.example.toilet.Location;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -10,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
@@ -127,17 +125,6 @@ public class JdbcOperation {
         return retLocations;
     }
 
-    // 获取随机厕所位置记录
-    public Location getRandomLocation(List<Location> locations) {
-        if (locations == null || locations.isEmpty()) {
-            return null;
-        }
-
-        Random random = new Random();
-        int index = random.nextInt(locations.size());
-        return locations.get(index);
-    }
-
     // 关闭数据库连接
     public void closeConnection() {
         try {
@@ -147,24 +134,5 @@ public class JdbcOperation {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }
-
-    // 检查是否存在具有特定经纬度的厕所位置记录
-    public boolean checkLocationExists(double latitude, double longitude) {
-        String sql = "SELECT COUNT(*) AS count FROM toilet_location WHERE latitude = ? AND longitude = ?";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
-            preparedStatement.setDouble(1, latitude);
-            preparedStatement.setDouble(2, longitude);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    int count = resultSet.getInt("count");
-                    return count > 0;
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return false;
     }
 }

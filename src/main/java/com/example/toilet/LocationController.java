@@ -28,9 +28,4 @@ public class LocationController {
     public void addToiletLocation(@RequestBody Location location) {
         jdbcOperation.addToiletLocation(location);
     }
-
-    @GetMapping("/checkToiletLocation")
-    public boolean checkToiletLocation(@RequestParam double latitude, @RequestParam double longitude) {
-        return jdbcOperation.checkLocationExists(latitude, longitude);
-    }
 }

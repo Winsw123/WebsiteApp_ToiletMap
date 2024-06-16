@@ -1,9 +1,9 @@
 package com.example.toilet;
 
-public class Location extends Status {
+public class Location {
     private String name;
-    private String isFree;
     private String type;
+    private boolean isFree;
     private String latitude;
     private String longitude;
     private Status status;
@@ -11,13 +11,13 @@ public class Location extends Status {
     public Location() {
     }
 
-    public Location(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap, String name, String isFree, String type, String latitude, String longitude) {
-        this.status = new Status(isAvailable, isClean, isPaper, isSoap);
+    public Location(String name, String type, boolean isFree, String latitude, String longitude, Status status) {
         this.name = name;
-        this.isFree = isFree;
         this.type = type;
+        this.isFree = isFree;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.status = status;
     }
 
     public String getName() {
@@ -28,20 +28,20 @@ public class Location extends Status {
         this.name = name;
     }
 
-    public String getIsFree() {
-        return isFree;
-    }
-
-    public void setIsFree(String isFree) {
-        this.isFree = isFree;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean getIsFree() {
+        return isFree;
+    }
+
+    public void setFree(boolean isFree) {
+        this.isFree = isFree;
     }
 
     public String getLatitude() {
@@ -66,20 +66,5 @@ public class Location extends Status {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Location{" +
-                "name='" + name + '\'' +
-                ", isFree='" + isFree + '\'' +
-                ", type='" + type + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", isAvailable='" + getAvailable() + '\'' +
-                ", isClean='" + getClean() + '\'' +
-                ", isPaper='" + getPaper() + '\'' +
-                ", isSoap='" + getSoap() + '\'' +
-                '}';
     }
 }

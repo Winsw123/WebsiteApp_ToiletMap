@@ -5,17 +5,19 @@ class Toilet {
         this.isFree = true;
         this.longitude = 120.21379292529143;
         this.latitude = 23.00158213806466;
-        this.Status = {
+        this.status = {
             isAvailable: true,
             isClean: true,
             isPaper: true,
             isSoap: true
         };
-        Toilet.prototype.set = function(json) {
-            return Object.assign(this, json);
-        }
     }
+        set(json) {
+            Object.assign(this, json);
+            return this;
+        }
 }
+
 
 const map = L.map('map').setView([23, 120.21], 15);
 const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -33,7 +35,7 @@ var test = "{\
     \"isFree\": false,\
     \"longitude\": 120.21557856948613,\
     \"latitude\": 22.9942663239397,\
-    \"Status\": {\
+    \"status\": {\
         \"isAvailable\" : false,\
         \"isClean\" : false,\
         \"isPaper\" : false,\
@@ -140,10 +142,10 @@ function formatPopup(toilet, toiletDist) {
         default: type = toilet.type;
     }
     let free = toilet.isFree ? "" : "<b>需付費使用</b><br>";
-    let available = toilet.Status.isAvailable ? "" : "<b>目前不可用</b><br>";
-    let clean = toilet.Status.isClean ? "乾淨整潔" : "整潔欠佳";
-    let paper = toilet.Status.isPaper ? "有衛生紙" : "沒有衛生紙";
-    let soap = toilet.Status.isSoap ? "有肥皂" : "沒有肥皂";
+    let available = toilet.status.isAvailable ? "" : "<b>目前不可用</b><br>";
+    let clean = toilet.status.isClean ? "乾淨整潔" : "整潔欠佳";
+    let paper = toilet.status.isPaper ? "有衛生紙" : "沒有衛生紙";
+    let soap = toilet.status.isSoap ? "有肥皂" : "沒有肥皂";
     let dist = "";
     if (toiletDist >= 0) dist = "距離：" + toiletDist + "m";
     var format = "\
@@ -261,7 +263,7 @@ function submit() {
             isFree: form_isFree,
             longitude: form_longitude,
             latitude: form_latitude,
-            Status: {
+            status: {
                 isAvailable: form_isAvailable,
                 isClean: form_isClean,
                 isPaper: form_isPaper,
@@ -286,7 +288,7 @@ function submit() {
         isFree: c("form_isFree"),
         longitude: v("form_longitude"),
         latitude: v("form_latitude"),
-        Status: {
+        status: {
             isAvailable: c("form_isAvailable"),
             isClean: c("form_isClean"),
             isPaper: c("form_isPaper"),

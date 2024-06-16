@@ -81,7 +81,7 @@ public class JdbcOperation {
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(sql)) {
             preparedStatement.setString(1, location.getName());
             preparedStatement.setString(2, location.getType());
-            preparedStatement.setString(3, location.getIsFree());
+            preparedStatement.setBoolean(3, location.getIsFree());
             preparedStatement.setBoolean(4, location.getStatus().getAvailable());
             preparedStatement.setBoolean(5, location.getStatus().getClean());
             preparedStatement.setBoolean(6, location.getStatus().getPaper());
@@ -110,15 +110,16 @@ public class JdbcOperation {
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String type = resultSet.getString("type");
-                String isFree = resultSet.getString("isFree");
+                boolean isFree = resultSet.getBoolean("isFree");
                 boolean isAvailable = resultSet.getBoolean("isAvailable");
                 boolean isClean = resultSet.getBoolean("isClean");
                 boolean isPaper = resultSet.getBoolean("isPaper");
                 boolean isSoap = resultSet.getBoolean("isSoap");
                 String longitude = resultSet.getString("longitude");
                 String latitude = resultSet.getString("latitude");
+                Status status = new Status(isAvailable, isClean, isPaper, isSoap);
 
-                Location location = new Location(isAvailable, isClean, isPaper, isSoap, name, type, isFree, latitude, longitude);
+                Location location = new Location(name, type, isFree, latitude, longitude, status);
                 retLocations.add(location);
             }
         } catch (SQLException ex) {

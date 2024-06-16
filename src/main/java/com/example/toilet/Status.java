@@ -1,10 +1,13 @@
 package com.example.toilet;
 
 public class Status {
-    protected boolean isAvailable;
-    protected boolean isClean;
-    protected boolean isPaper;
-    protected boolean isSoap;
+    private boolean isAvailable;
+    private boolean isClean;
+    private boolean isPaper;
+    private boolean isSoap;
+
+    public Status() {
+    }
 
     public Status(boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap) {
         this.isAvailable = isAvailable;
@@ -13,15 +16,12 @@ public class Status {
         this.isSoap = isSoap;
     }
 
-    public Status() {
-    }
-
     public boolean getAvailable() {
         return isAvailable;
     }
 
     public void setAvailable(boolean available) {
-        this.isAvailable = available;
+        isAvailable = available;
     }
 
     public boolean getClean() {
@@ -29,7 +29,7 @@ public class Status {
     }
 
     public void setClean(boolean clean) {
-        this.isClean = clean;
+        isClean = clean;
     }
 
     public boolean getPaper() {
@@ -37,7 +37,7 @@ public class Status {
     }
 
     public void setPaper(boolean paper) {
-        this.isPaper = paper;
+        isPaper = paper;
     }
 
     public boolean getSoap() {
@@ -45,16 +45,6 @@ public class Status {
     }
 
     public void setSoap(boolean soap) {
-        this.isSoap = soap;
-    }
-
-    @Override
-    public String toString() {
-        return "Status{" +
-                "isAvailable='" + isAvailable + '\'' +
-                ", isClean='" + isClean + '\'' +
-                ", isPaper='" + isPaper + '\'' +
-                ", isSoap='" + isSoap + '\'' +
-                '}';
+        isSoap = soap;
     }
 }

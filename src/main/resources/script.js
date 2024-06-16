@@ -290,7 +290,7 @@ function submit() {
     }).catch((error) => {
         alert(error);
     });
-    test3.push(new Toilet().set({ //test
+    /*test3.push(new Toilet().set({ 
         name: v("form_name"),
         type: v("form_type"),
         isFree: c("form_isFree"),
@@ -300,8 +300,8 @@ function submit() {
         isClean: c("form_isClean"),
         isPaper: c("form_isPaper"),
         isSoap: c("form_isSoap")
-    }));
-    refresh(); //test
+    }));*/
+    refresh(); 
 }
 function v(id){
     return document.getElementById(id).value;
@@ -319,5 +319,5 @@ function refresh(){
         formLayer.removeLayer(item);
     });
     getToiletLocation();
-    displayToilet(test3, null); //test
+    //displayToilet(test3, null); 
 }

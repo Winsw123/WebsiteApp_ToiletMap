@@ -4,16 +4,16 @@ public class Location {
     private String name;
     private String type;
     private boolean isFree;
-    private String longitude;
-    private String latitude;
     private boolean isAvailable;
     private boolean isClean;
     private boolean isPaper;
     private boolean isSoap;
+    private String longitude;
+    private String latitude;
 
     // Constructors
-    public Location(String name, String type, boolean isFree, String longitude, String latitude,
-                    boolean isAvailable, boolean isClean, boolean isPaper, boolean isSoap) {
+    public Location(String name, String type, boolean isFree, boolean isAvailable, boolean isClean
+                    , boolean isPaper, boolean isSoap, String longitude, String latitude) {
         this.name = name;
         this.type = type;
         this.isFree = isFree;
@@ -46,8 +46,8 @@ public class Location {
         return isFree;
     }
 
-    public void setFree(boolean free) {
-        isFree = free;
+    public void setFree(boolean isFree) {
+        this.isFree = isFree;
     }
 
     public String getLongitude() {
@@ -70,32 +70,32 @@ public class Location {
         return isAvailable;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
     public boolean isClean() {
         return isClean;
     }
 
-    public void setClean(boolean clean) {
-        isClean = clean;
+    public void setClean(boolean isClean) {
+        this.isClean = isClean;
     }
 
     public boolean isPaper() {
         return isPaper;
     }
 
-    public void setPaper(boolean paper) {
-        isPaper = paper;
+    public void setPaper(boolean isPaper) {
+        this.isPaper = isPaper;
     }
 
     public boolean isSoap() {
         return isSoap;
     }
 
-    public void setSoap(boolean soap) {
-        isSoap = soap;
+    public void setSoap(boolean isSoap) {
+        this.isSoap = isSoap;
     }
 
     // toString method (for logging and debugging)

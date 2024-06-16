@@ -11,11 +11,18 @@ class Toilet {
         this.isSoap = true;
     }
     set(json) {
-        Object.assign(this, json);
+        this.name = json.name || this.name;
+        this.type = json.type || this.type;
+        this.isFree = json.free !== undefined ? json.free : this.isFree;
+        this.longitude = json.longitude || this.longitude;
+        this.latitude = json.latitude || this.latitude;
+        this.isAvailable = json.available !== undefined ? json.available : this.isAvailable;
+        this.isClean = json.clean !== undefined ? json.clean : this.isClean;
+        this.isPaper = json.paper !== undefined ? json.paper : this.isPaper;
+        this.isSoap = json.soap !== undefined ? json.soap : this.isSoap;
         return this;
     }
 }
-
 
 
 const map = L.map('map').setView([23, 120.21], 15);
@@ -27,6 +34,8 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var markerLayer = L.featureGroup().addTo(map);
 var toiletLayer = L.featureGroup().addTo(map);
 var formLayer = L.featureGroup().addTo(map);
+
+var current;
 
 var test = "{\
     \"name\": \"南一中校門口\",\
@@ -44,13 +53,32 @@ var test2 = "{\
 }";
 var test3 = [];
 
-var toiletsAll;
+var toiletsAll = [];
 getToiletLocation();
 
 async function getToiletLocation() {
-    let toiletsAll = [];
+    //let toiletsAll = [];
     let url = "http://localhost:8080/api/getToiletLocation"; // 后端的URL
-
+    fetch(url).then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('無法連絡伺服器，請回報開發者');
+        }).then((json) => {
+            var jsonArray = json;
+            console.log('Raw data from server:', json); 
+            for (var i = 0; i < jsonArray.length; i++) {
+                let toilet = new Toilet();
+                toilet.set(jsonArray[i]);
+                toiletsAll.push(toilet);
+                //displayToilet(toiletsAll, null);
+            }
+            console.log('Toilets after processing:', toiletsAll); 
+            displayToilet(toiletsAll, null);
+        }).catch((error) => {
+            alert(error);
+        });
+/*
     try {
         let response = await fetch(url, {
             method: 'GET',
@@ -85,33 +113,16 @@ async function getToiletLocation() {
     } catch (error) {
         alert(error.message);
     }
-    toiletsAll.push(new Toilet()); // test
-    toiletsAll.push(new Toilet().set(JSON.parse(test))); // test
-    displayToilet(toiletsAll, null);
+        */
+    //toiletsAll.push(new Toilet()); // test
+    //toiletsAll.push(new Toilet().set(JSON.parse(test))); // test
+    //displayToilet(toiletsAll, null);
 }
 
 function getDistance() {
     let distance = [];
-    let jsonArray = JSON.parse(test2).values;
-    /*let url = ""; // fill url here
-    fetch(url).then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('無法連絡伺服器，請回報開發者');
-        }).then((json) => {
-            var jsonArray = JSON.parse(json);
-            for (var i = 0; i < jsonArray.length; i++) {
-                distance.push(jsonArray[i]);
-            }
-            return distance;
-        }).catch((error) => {
-            alert(error);
-        });
-    */
-
-    for (var i = 0; i < jsonArray.length; i++) { //test
-        distance.push(jsonArray[i]);
+    for (var i = 0; i < toiletsAll.length; i++) { //test
+        distance.push(Math.round(map.distance(L.latLng(toiletsAll[i].latitude, toiletsAll[i].longitude),current.getLatLng())));
     }
     return distance;
 }
@@ -162,17 +173,19 @@ function findToilet() {
     }
     return navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
 }
+
 function locationSuccess(position) {
     var longitude = position.coords.longitude, latitude = position.coords.latitude;
     markerLayer.getLayers().forEach((item) => {
         markerLayer.removeLayer(item);
     });
-    var marker = L.marker([latitude, longitude]).addTo(markerLayer);
-    marker._icon.classList.add("icon_red");
+    current = L.marker([latitude, longitude]).addTo(markerLayer);
+    current._icon.classList.add("icon_red");
     map.flyTo([latitude, longitude], 15);
-    marker.bindPopup("現在位置").openPopup();
+    current.bindPopup("現在位置").openPopup();
     calcDistance();
 }
+
 function calcDistance() {
     var distance = getDistance();
     displayToilet(toiletsAll, distance);

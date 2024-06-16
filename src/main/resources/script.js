@@ -5,18 +5,17 @@ class Toilet {
         this.isFree = true;
         this.longitude = 120.21379292529143;
         this.latitude = 23.00158213806466;
-        this.status = {
-            isAvailable: true,
-            isClean: true,
-            isPaper: true,
-            isSoap: true
-        };
+        this.isAvailable = true;
+        this.isClean = true;
+        this.isPaper = true;
+        this.isSoap = true;
     }
-        set(json) {
-            Object.assign(this, json);
-            return this;
-        }
+    set(json) {
+        Object.assign(this, json);
+        return this;
+    }
 }
+
 
 
 const map = L.map('map').setView([23, 120.21], 15);
@@ -35,12 +34,10 @@ var test = "{\
     \"isFree\": false,\
     \"longitude\": 120.21557856948613,\
     \"latitude\": 22.9942663239397,\
-    \"status\": {\
-        \"isAvailable\" : false,\
-        \"isClean\" : false,\
-        \"isPaper\" : false,\
-        \"isSoap\" : false\
-    }\
+    \"isAvailable\" : false,\
+    \"isClean\" : false,\
+    \"isPaper\" : false,\
+    \"isSoap\" : false\
 }";
 var test2 = "{\
     \"values\": [114, 514]\
@@ -142,10 +139,10 @@ function formatPopup(toilet, toiletDist) {
         default: type = toilet.type;
     }
     let free = toilet.isFree ? "" : "<b>需付費使用</b><br>";
-    let available = toilet.status.isAvailable ? "" : "<b>目前不可用</b><br>";
-    let clean = toilet.status.isClean ? "乾淨整潔" : "整潔欠佳";
-    let paper = toilet.status.isPaper ? "有衛生紙" : "沒有衛生紙";
-    let soap = toilet.status.isSoap ? "有肥皂" : "沒有肥皂";
+    let available = toilet.isAvailable ? "" : "<b>目前不可用</b><br>";
+    let clean = toilet.isClean ? "乾淨整潔" : "整潔欠佳";
+    let paper = toilet.isPaper ? "有衛生紙" : "沒有衛生紙";
+    let soap = toilet.isSoap ? "有肥皂" : "沒有肥皂";
     let dist = "";
     if (toiletDist >= 0) dist = "距離：" + toiletDist + "m";
     var format = "\
@@ -263,12 +260,10 @@ function submit() {
             isFree: form_isFree,
             longitude: form_longitude,
             latitude: form_latitude,
-            status: {
-                isAvailable: form_isAvailable,
-                isClean: form_isClean,
-                isPaper: form_isPaper,
-                isSoap: form_isSoap
-            }
+            isAvailable: form_isAvailable,
+            isClean: form_isClean,
+            isPaper: form_isPaper,
+            isSoap: form_isSoap
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -288,12 +283,10 @@ function submit() {
         isFree: c("form_isFree"),
         longitude: v("form_longitude"),
         latitude: v("form_latitude"),
-        status: {
-            isAvailable: c("form_isAvailable"),
-            isClean: c("form_isClean"),
-            isPaper: c("form_isPaper"),
-            isSoap: c("form_isSoap")
-        }
+        isAvailable: c("form_isAvailable"),
+        isClean: c("form_isClean"),
+        isPaper: c("form_isPaper"),
+        isSoap: c("form_isSoap")
     }));
     refresh(); //test
 }

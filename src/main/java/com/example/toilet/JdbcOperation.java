@@ -62,8 +62,8 @@ public class JdbcOperation {
                     "isClean BOOLEAN," +
                     "isPaper BOOLEAN," +
                     "isSoap BOOLEAN," +
-                    "Longitude VARCHAR(255) NOT NULL," +
-                    "Latitude VARCHAR(255) NOT NULL," +
+                    "longitude VARCHAR(255) NOT NULL," +
+                    "latitude VARCHAR(255) NOT NULL," +
                     "PRIMARY KEY (id))";
 
             statement.executeUpdate(createTableSQL);

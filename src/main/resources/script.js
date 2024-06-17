@@ -10,7 +10,7 @@ class Toilet {
         this.isPaper = true;
         this.isSoap = true;
     }
-    //後端GET的json格式和前端建構子的json格式不一，需進行轉換，不然無法覆蓋建構子的預設值
+    //后端GET的json的变数大小写和前端不一，需进行转换才存取，否则无法覆盖建构子预设值
     set(json) {
         this.name = json.name || this.name;
         this.type = json.type || this.type;
@@ -55,8 +55,10 @@ var test2 = "{\
 var test3 = [];
 
 var toiletsAll = [];
+//一开始先获取后台所有已存取的厕所并显示在页面
 getToiletLocation();
 
+//获取所有厕所资讯并显示在页面
 async function getToiletLocation() {
     //let toiletsAll = [];
     let url = "http://localhost:8080/api/getToiletLocation"; // 后端的URL
@@ -120,6 +122,7 @@ async function getToiletLocation() {
     //displayToilet(toiletsAll, null);
 }
 
+//计算User和厕所之间的距离
 function getDistance() {
     let distance = [];
     for (var i = 0; i < toiletsAll.length; i++) { //test
@@ -140,6 +143,7 @@ function displayToilet(toilets, distance) {
     }
 }
 
+//前端展示厕所资讯的格式
 function formatPopup(toilet, toiletDist) {
     let name = toilet.name;
     let type;
@@ -175,6 +179,7 @@ function findToilet() {
     return navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
 }
 
+//定位User并计算和所有厕所之间的距离
 function locationSuccess(position) {
     var longitude = position.coords.longitude, latitude = position.coords.latitude;
     markerLayer.getLayers().forEach((item) => {
@@ -191,6 +196,8 @@ function calcDistance() {
     var distance = getDistance();
     displayToilet(toiletsAll, distance);
 }
+
+//定位请求页面
 function locationError(err) {
     switch (err.code) {
         case err.PERMISSION_DENIED:
@@ -209,10 +216,13 @@ function locationError(err) {
     return [2, null, null];
 }
 
+//前端新增厕所页面
 function addToilet() {
     document.getElementById("overlay").style.visibility = "visible";
     document.getElementById("menu").style.visibility = "visible";
 }
+
+//前端显示页面
 function form() {
     formLayer.getLayers().forEach((item) => {
         formLayer.removeLayer(item);
@@ -221,6 +231,8 @@ function form() {
     marker.bindPopup(makeForm()).openPopup();
     closeDialog();
 }
+
+//新增厕所的输入页面格式
 function makeForm() {
     var format = "\
         <div class='form'>\
@@ -249,6 +261,8 @@ function makeForm() {
         </div>";
     return format;
 }
+
+//上传，POST
 function submit() {
     var form_name = document.getElementById("form_name").value;
     var form_type = document.getElementById("form_type").value;
@@ -304,16 +318,24 @@ function submit() {
     }));*/
     refresh(); 
 }
+
+//格式转换
 function v(id){
     return document.getElementById(id).value;
 }
+
+//格式转换
 function c(id){
     return document.getElementById(id).checked;
 }
+
+//关闭图示
 function closeDialog() {
     document.getElementById("overlay").style.visibility = "hidden";
     document.getElementById("menu").style.visibility = "hidden";
 }
+
+//刷新页面
 function refresh(){
     alert('資料上傳成功');
     formLayer.getLayers().forEach((item) => {

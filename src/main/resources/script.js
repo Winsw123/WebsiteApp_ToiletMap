@@ -10,6 +10,7 @@ class Toilet {
         this.isPaper = true;
         this.isSoap = true;
     }
+    //後端GET的json格式和前端建構子的json格式不一，需進行轉換，不然無法覆蓋建構子的預設值
     set(json) {
         this.name = json.name || this.name;
         this.type = json.type || this.type;

@@ -44,7 +44,7 @@ Not every public restroom meets everyone's needs—factors such as cleanliness, 
 
 ---
 ## Draft UML Diagram
-![draftUML](images/Picture1.png)
+![draftUML](images/Picture4.png)
 ---
 ## Ultimate UML Diagram
 ![ultimateUML](images/Picture2.png)

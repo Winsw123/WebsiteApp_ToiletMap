@@ -1,4 +1,4 @@
-# [112_2 Program Design II] Final Project
+# [112_2 Program Design II] Final Group Project
 
 ## Main goal
 - Help hosts to easily manage the information of the toilets

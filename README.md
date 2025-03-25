@@ -22,8 +22,11 @@ Not every public restroom meets everyone's needs—factors such as cleanliness, 
 - Users could create and upload the new information of the toilets to our website
 - Users could get the recent information when they load our website<br>
 
-### -Red pin: User
-### -Blue pins: Toilets
+### Demo
+- Red pin: User
+- Blue pins: Toilets
+- AddFunction: Add the new toilet pins on the map and create the information by clicking the add button
+- GetFunction: Get all the information and locate on the map when load in
 ![demo](images/Screenshot_2024-06-17_211330.png)
 
 ## Descriptions

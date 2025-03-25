@@ -1,4 +1,9 @@
-# pd2ToiletProject
+# [112_2 Program Design II] Final Project
 
-## use to find the nearest toliets and upload information of new spots by user  
-## please find the project in tree of winston-backend and installed xmapp or mysql before running  
+# Main goal
+## Help hosts to easily manage the information of the toilets
+## Help users to track the nearby toilets
+
+# Before running
+## The complete project is in the branch 'winston-backend' 
+## Installed xmapp or mysql before running  

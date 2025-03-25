@@ -49,3 +49,9 @@ Not every public restroom meets everyone's needs—factors such as cleanliness, 
 ## Ultimate UML Diagram
 ![ultimateUML](images/Picture2.png)
 ![ultimateUML](images/Picture3.png)
+
+## Future Development Directions
+- "EDIT" function
+- The paths to the toilets
+- Rating and Review system
+- more detailed information

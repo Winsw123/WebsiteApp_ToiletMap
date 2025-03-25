@@ -22,7 +22,7 @@ Not every public restroom meets everyone's needs—factors such as cleanliness, 
 - Users could create and upload the new information of the toilets to our website
 - Users could get the recent information when they load our website
 
-![Alt text](images/Screenshot_2024-06-17_211330.png)
+![demo](images/Screenshot_2024-06-17_211330.png)
 
 ## Descriptions
 ### - Some new skills we 've learn in this project
@@ -44,6 +44,8 @@ Not every public restroom meets everyone's needs—factors such as cleanliness, 
 
 ---
 ## Draft UML Diagram
-
+![draftUML](images/Picture1.png)
 ---
 ## Ultimate UML Diagram
+![ultimateUML](images/Picture2.png)
+![ultimateUML](images/Picture3.png)
